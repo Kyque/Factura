@@ -16,8 +16,8 @@
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: #f5f5f5;
-            padding: 20px;
             min-height: 100vh;
+            /* Se quita el padding de aquí y se aplica en móvil con media query */
         }
         
         /* Estilos del Login */
@@ -85,6 +85,7 @@
         
         .app-content {
             display: none;
+            padding: 20px 10px; /* Padding para el contenedor principal en escritorio */
         }
         
         /* Estilos de la Factura */
@@ -400,26 +401,206 @@
             }
         }
         
+        /* --- ESTILOS MÓVILES --- */
         @media (max-width: 768px) {
-            .info-section {
-                grid-template-columns: 1fr;
+            body {
+                padding: 0; /* Sin padding en el body móvil */
             }
+
+            .app-content {
+                padding: 10px; /* Padding general para la app en móvil */
+            }
+
+            .login-container {
+                margin: 50px auto;
+                padding: 25px;
+                width: 90%;
+            }
+
+            .controls {
+                text-align: center;
+            }
+            
+            .btn-download {
+                width: 100%;
+                padding: 15px;
+            }
+
+            .header {
+                padding: 25px;
+            }
+            
             .header-content {
                 flex-direction: column;
                 gap: 20px;
             }
+            
+            .company-logo img {
+                width: 60px;
+                height: 60px;
+            }
+            
+            .company-info h1 {
+                font-size: 24px;
+            }
+            
             .invoice-title {
                 text-align: left;
             }
+            
+            .invoice-title h2 {
+                font-size: 32px;
+            }
+            
+            .content {
+                padding: 25px;
+            }
+            
+            .info-section {
+                grid-template-columns: 1fr;
+            }
+
+            .info-box {
+                padding: 20px;
+            }
+
+            /* --- Inicio: Tabla Responsiva --- */
+            .details-table {
+                box-shadow: none;
+                border: 0;
+            }
+
+            .details-table thead {
+                display: none; /* Ocultar cabecera original */
+            }
+            
+            .details-table tr.item-row {
+                display: block; /* Convertir filas en bloques */
+                border-radius: 8px;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+                margin-bottom: 20px;
+                background: #fff;
+                border: 1px solid #e2e8f0;
+                overflow: hidden; /* Para contener los bordes de las celdas */
+            }
+            
+            .details-table td {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 12px 15px;
+                font-size: 14px;
+                border: none;
+                border-bottom: 1px solid #e2e8f0;
+                /* Resetear estilos inline */
+                text-align: left !important; 
+            }
+
+            .details-table tr.item-row td:last-child {
+                border-bottom: none;
+            }
+            
+            /* Usar data-label para mostrar el título de la columna */
+            .details-table td::before {
+                content: attr(data-label);
+                font-weight: 600;
+                color: #2d3748;
+                padding-right: 15px;
+                flex-basis: 40%; /* Ancho para el label */
+                min-width: 100px;
+            }
+            
+            .details-table td[data-label="Descripción"] {
+                flex-direction: column; /* Apilar label y textarea */
+                align-items: flex-start;
+            }
+            
+            .details-table td[data-label="Descripción"]::before {
+                 margin-bottom: 10px;
+            }
+            
+            .details-table input,
+            .details-table textarea {
+                width: auto;
+                flex-grow: 1; /* El input ocupa el espacio restante */
+                min-width: 100px;
+            }
+            
+            .details-table input[type="number"] {
+                text-align: right; /* Alinear números a la derecha */
+            }
+
+            .details-table td[data-label="Acción"] {
+                justify-content: center; /* Centrar el botón de borrar */
+            }
+            .details-table td[data-label="Acción"]::before {
+                content: ''; /* Ocultar label de "Acción" */
+                display: none;
+            }
+            .btn-remove {
+                width: 100%;
+                padding: 10px;
+            }
+            /* --- Fin: Tabla Responsiva --- */
+
+            .btn-add-row {
+                width: 100%;
+                padding: 12px;
+            }
+
+            .total-section {
+                justify-content: center;
+            }
+            
+            .total-box {
+                min-width: 0;
+                width: 100%;
+                padding: 20px;
+            }
+
+            .total-row.final {
+                font-size: 18px;
+            }
+
             .footer {
                 flex-direction: column;
-                gap: 20px;
+                gap: 25px;
+                padding: 25px;
+                text-align: center;
             }
         }
+
+        /* Ajustes para pantallas muy pequeñas */
+        @media (max-width: 380px) {
+            .app-content, .login-container {
+                padding: 10px;
+            }
+            .header, .content, .footer, .info-box {
+                padding: 15px;
+            }
+            .total-box {
+                padding: 15px;
+            }
+            .total-row.final {
+                font-size: 16px;
+            }
+            
+            /* Apilar label e input en pantallas muy chicas */
+            .details-table td {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .details-table td::before {
+                margin-bottom: 8px;
+            }
+             .details-table input, .details-table textarea {
+                width: 100%;
+             }
+        }
+
     </style>
 </head>
 <body>
-    <!-- Pantalla de Login -->
     <div class="login-container" id="loginContainer">
         <h2>🔒 Acceso a Facturación</h2>
         <p class="subtitle">Rancho Montecristo</p>
@@ -428,7 +609,6 @@
         <p class="error-message" id="errorMessage">❌ Contraseña incorrecta</p>
     </div>
 
-    <!-- Contenido de la Aplicación (oculto inicialmente) -->
     <div class="app-content" id="appContent">
         <div class="controls">
             <button class="btn-download" onclick="downloadPDF()">📄 Descargar PDF</button>
@@ -483,19 +663,19 @@
                     </thead>
                     <tbody id="itemsTable">
                         <tr class="item-row">
-                            <td>
+                            <td data-label="Descripción">
                                 <textarea rows="2" placeholder="Alquiler de Rancho Montecristo para..." class="item-desc"></textarea>
                             </td>
-                            <td style="text-align: center;">
+                            <td data-label="Fecha" style="text-align: center;">
                                 <input type="date" class="item-date">
                             </td>
-                            <td style="text-align: center;">
+                            <td data-label="Cantidad (días)" style="text-align: center;">
                                 <input type="number" class="item-qty" value="1" min="1" onchange="calculateTotal()">
                             </td>
-                            <td style="text-align: right;">
+                            <td data-label="Precio" style="text-align: right;">
                                 <input type="number" class="item-price" placeholder="0.00" step="0.01" onchange="calculateTotal()">
                             </td>
-                            <td style="text-align: center;">
+                            <td data-label="Acción" style="text-align: center;">
                                 <button class="btn-remove" onclick="removeRow(this)">✕</button>
                             </td>
                         </tr>
@@ -530,7 +710,8 @@
         // Verificar contraseña
         function checkPassword() {
             const password = document.getElementById('passwordInput').value;
-            const correctPassword = '1q2w3e4r5t';
+            // CONTRASEÑA REAL - Asegúrate de cambiarla
+            const correctPassword = '1q2w3e4r5t'; 
             
             if (password === correctPassword) {
                 document.getElementById('loginContainer').style.display = 'none';
@@ -575,6 +756,11 @@
                 colorLight: "#ffffff",
                 correctLevel: QRCode.CorrectLevel.H
             });
+
+            // Añadir listener a los inputs de la primera fila
+            document.querySelectorAll('.item-row input').forEach(input => {
+                input.addEventListener('change', calculateTotal);
+            });
         }
         
         // Generar número de factura automático
@@ -606,57 +792,80 @@
             document.getElementById('totalAmount').textContent = `$${total.toFixed(2)}`;
         }
         
-        // Añadir fila
+        // Añadir fila (MODIFICADO)
         function addRow() {
             const table = document.getElementById('itemsTable');
             const newRow = document.createElement('tr');
             newRow.className = 'item-row';
             newRow.innerHTML = `
-                <td>
+                <td data-label="Descripción">
                     <textarea rows="2" placeholder="Descripción del servicio..." class="item-desc"></textarea>
                 </td>
-                <td style="text-align: center;">
+                <td data-label="Fecha" style="text-align: center;">
                     <input type="date" class="item-date">
                 </td>
-                <td style="text-align: center;">
+                <td data-label="Cantidad (días)" style="text-align: center;">
                     <input type="number" class="item-qty" value="1" min="1" onchange="calculateTotal()">
                 </td>
-                <td style="text-align: right;">
+                <td data-label="Precio" style="text-align: right;">
                     <input type="number" class="item-price" placeholder="0.00" step="0.01" onchange="calculateTotal()">
                 </td>
-                <td style="text-align: center;">
+                <td data-label="Acción" style="text-align: center;">
                     <button class="btn-remove" onclick="removeRow(this)">✕</button>
                 </td>
             `;
+            
+            // Añadir listeners a los nuevos inputs
+            newRow.querySelectorAll('input').forEach(input => {
+                input.addEventListener('change', calculateTotal);
+            });
+            
             table.appendChild(newRow);
         }
         
-        // Eliminar fila
+        // Quitar fila
         function removeRow(button) {
-            const rows = document.querySelectorAll('.item-row');
-            if (rows.length > 1) {
-                button.closest('tr').remove();
-                calculateTotal();
-            } else {
-                alert('Debe mantener al menos un servicio en la factura');
-            }
+            const row = button.closest('tr');
+            row.remove();
+            calculateTotal();
         }
         
-        // Descargar PDF
+        // Descargar PDF (MODIFICADO)
         function downloadPDF() {
-            const invoice = document.getElementById('invoice');
+            const element = document.getElementById('invoice');
+            const clientName = document.getElementById('clientName').value || 'factura';
             const invoiceNum = document.getElementById('invoiceNumber').textContent;
             
+            // Crear un nombre de archivo dinámico
+            const filename = `Factura_${invoiceNum}_${clientName.replace(/\s+/g, '_')}.pdf`;
+
+            // Opciones para html2pdf
             const opt = {
-                margin: 0,
-                filename: `Factura_${invoiceNum}.pdf`,
+                margin: 0.5,
+                filename: filename,
                 image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2 },
-                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+                html2canvas: { 
+                    scale: 2, 
+                    useCORS: true // Necesario para que la imagen de Google Drive funcione
+                },
+                jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
             };
+
+            // ---- IMPORTANTE ----
+            // Forzar temporalmente el ancho de escritorio en el elemento
+            // para que el PDF se genere con el layout de escritorio, no el móvil.
+            element.style.width = '900px'; 
             
-            html2pdf().set(opt).from(invoice).save();
+            html2pdf().from(element).set(opt).save().then(() => {
+                // Restablecer el estilo después de generar el PDF
+                element.style.width = ''; 
+            }).catch((err) => {
+                console.error("Error al generar PDF:", err);
+                // Asegurarse de restablecer el estilo incluso si hay un error
+                element.style.width = ''; 
+            });
         }
+
     </script>
 </body>
 </html>
